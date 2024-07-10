@@ -15,14 +15,26 @@ exports.create = async (req, res) => {
 // Obtener lista de reservas
 exports.findAll = async (req, res) => {
     res.json({
-        msg: 'bookings successfully obtained.',
+        msg: 'Bookings successfully obtained.',
         data: bookings,
     })
 };
 
 // Obtener reserva por ID
 exports.findOne = async (req, res) => {
-    
+    const bookingId = parseInt(req.params.id);
+    const booking = bookings.find((b) => b.id === bookingId);
+
+    if (!booking) {
+        return res.status(404).json({
+            msg: 'Booking not found.'
+        });
+    };
+
+    res.json({
+        msg: 'Booking successfully obtained.',
+        data: booking,
+    });
 };
 
 // Actualizar reserva
