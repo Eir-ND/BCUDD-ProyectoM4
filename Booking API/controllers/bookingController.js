@@ -1,11 +1,10 @@
-const { Booking } = require('../models/booking')
-
 let bookings = [];
 
+// Crear reserva
 exports.create = async (req, res) => {
     const newBooking = req.body;
     newBooking.id = bookings.length + 1;
-    booking.push(newBooking);
+    bookings.push(newBooking);
 
     res.status(201).json({
         msg: 'Booking made successfully',
@@ -13,18 +12,26 @@ exports.create = async (req, res) => {
     })
 };
   
+// Obtener lista de reservas
+exports.findAll = async (req, res) => {
+    res.json({
+        msg: 'bookings successfully obtained.',
+        data: bookings,
+    })
+};
+
+// Obtener reserva por ID
+exports.findOne = async (req, res) => {
+    
+};
+
+// Actualizar reserva
 exports.update = (req, res) => {
-    res.send({ ok: true, description: 'Producto actualizado correctamente' });
+    
 };
   
+// Eliminar reserva
 exports.remove = (req, res) => {
-    res.send({ ok: true, description: 'Producto eliminado correctamente' });
+    
 };
   
-exports.findAll = (req, res) => {
-    res.send([p1, p2, p3]);
-};
-  
-exports.findOne = (req, res) => {
-    res.send(p1);
-};

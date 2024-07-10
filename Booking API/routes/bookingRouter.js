@@ -5,10 +5,10 @@ const router = express.Router();
 
 const bookingController = require('../controllers/bookingController');
 
-router.post("/", bookingController.create);
-router.get("/", bookingController.findAll);
-router.get("/:id", bookingController.findOne);
-router.patch("/:id", bookingController.update);
-router.delete("/:id", bookingController.remove);
+router.post("/booking", bookingController.create);
+router.get("/booking", bookingController.findAll);
+router.get("/booking/:id", bookingController.findOne);
+router.patch("/booking/:id", bookingController.update);
+router.delete("/booking/:id", bookingController.remove);
 
 module.exports = router;
