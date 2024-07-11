@@ -38,12 +38,31 @@ exports.findOne = async (req, res) => {
 };
 
 // Actualizar reserva
-exports.update = (req, res) => {
-    
+exports.update = async (req, res) => {
+    const bookingId = parseInt(req.params.id)
+    const bookingIndex = bookings.findIndex((b) => b.id === bookingId);
+
+    if (bookingIndex === -1) {
+        return res.status(404).json({ msg: 'Pedido no encontrado.' })
+    }
+
+    bookings[bookingIndex] = { ...bookings[bookingIndex], ...req.body }
+    res.json({
+        msg: 'Pedido actualizado con éxito.',
+        data: bookings[bookingIndex],
+    })
 };
   
 // Eliminar reserva
-exports.remove = (req, res) => {
-    
+exports.remove = async (req, res) => {
+    const bookingId = parseInt(req.params.id)
+    const bookingIndex = bookings.findIndex((b) => b.id === bookingId);
+
+    if (bookingIndex === -1) {
+        return res.status(404).json({ msg: 'Booking not found.' });
+    }
+
+    bookings.splice(bookingIndex, 1)
+    res.json({ msg: 'Booking successfuly deleted.'});
 };
   
