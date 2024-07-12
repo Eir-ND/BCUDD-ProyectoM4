@@ -1,4 +1,4 @@
-class booking {
+class Booking {
     constructor(
         id, 
         nameHotel, 
@@ -21,3 +21,5 @@ class booking {
         this.paymentStatus = paymentStatus;
     };
 };
+
+module.exports = Booking;

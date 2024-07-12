@@ -1,9 +1,22 @@
+const Booking = require('../models/booking');
+const { v4: uuidv4 } = require('uuid');
 let bookings = [];
 
 // Crear reserva
 exports.create = async (req, res) => {
-    const newBooking = req.body;
-    newBooking.id = bookings.length + 1;
+    const { nameHotel, arrivalDate, departureDate, typeRoom, passengers, name, email, paymentStatus } = req.body;
+    const newBooking = new Booking(
+        uuidv4(),
+        nameHotel,
+        arrivalDate,
+        departureDate,
+        passengers,
+        typeRoom,
+        name,
+        email,
+        paymentStatus
+    );
+    
     bookings.push(newBooking);
 
     res.status(201).json({
@@ -22,7 +35,7 @@ exports.findAll = async (req, res) => {
 
 // Obtener reserva por ID
 exports.findOne = async (req, res) => {
-    const bookingId = parseInt(req.params.id);
+    const bookingId = req.params.id;
     const booking = bookings.find((b) => b.id === bookingId);
 
     if (!booking) {
@@ -39,7 +52,7 @@ exports.findOne = async (req, res) => {
 
 // Actualizar reserva
 exports.update = async (req, res) => {
-    const bookingId = parseInt(req.params.id)
+    const bookingId = (req.params.id)
     const bookingIndex = bookings.findIndex((b) => b.id === bookingId);
 
     if (bookingIndex === -1) {
@@ -55,7 +68,7 @@ exports.update = async (req, res) => {
   
 // Eliminar reserva
 exports.remove = async (req, res) => {
-    const bookingId = parseInt(req.params.id)
+    const bookingId = (req.params.id)
     const bookingIndex = bookings.findIndex((b) => b.id === bookingId);
 
     if (bookingIndex === -1) {
