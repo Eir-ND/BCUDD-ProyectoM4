@@ -5,7 +5,7 @@ class Booking {
         arrivalDate, 
         departureDate, 
         passengers, 
-        typeRoom, 
+        roomType, 
         name, 
         email, 
         paymentStatus
@@ -15,7 +15,7 @@ class Booking {
         this.arrivalDate = arrivalDate;
         this.departureDate = departureDate;
         this.passengers = passengers;
-        this.typeRoom = typeRoom;
+        this.roomType = roomType;
         this.name = name;
         this.email = email;
         this.paymentStatus = paymentStatus;

@@ -4,14 +4,14 @@ let bookings = [];
 
 // Crear reserva
 exports.create = async (req, res) => {
-    const { nameHotel, arrivalDate, departureDate, typeRoom, passengers, name, email, paymentStatus } = req.body;
+    const { nameHotel, arrivalDate, departureDate, roomType, passengers, name, email, paymentStatus } = req.body;
     const newBooking = new Booking(
         uuidv4(),
         nameHotel,
         arrivalDate,
         departureDate,
         passengers,
-        typeRoom,
+        roomType,
         name,
         email,
         paymentStatus
@@ -56,12 +56,12 @@ exports.update = async (req, res) => {
     const bookingIndex = bookings.findIndex((b) => b.id === bookingId);
 
     if (bookingIndex === -1) {
-        return res.status(404).json({ msg: 'Pedido no encontrado.' })
+        return res.status(404).json({ msg: 'Booking not found.' })
     }
 
     bookings[bookingIndex] = { ...bookings[bookingIndex], ...req.body }
     res.json({
-        msg: 'Pedido actualizado con éxito.',
+        msg: 'Booking successfully updated.',
         data: bookings[bookingIndex],
     })
 };
@@ -78,4 +78,23 @@ exports.remove = async (req, res) => {
     bookings.splice(bookingIndex, 1)
     res.json({ msg: 'Booking successfuly deleted.'});
 };
-  
+
+// Filtrar reservas
+exports.filter = async (req, res) => {
+    const { nameHotel, arrivalDate, departureDate, roomType, passengers, name, email, paymentStatus } = req.query;
+
+    if (roomType) {
+        const bookingFiltered = bookings.filter(
+            (booking) => booking.roomType === roomType
+        );
+        if (bookingFiltered.length === 0) {
+            return res
+                .status(404)
+                .json({ msg: 'Booking not found....' })
+        };
+        return res.json({
+            msg: "Room type",
+            data: bookingFiltered
+        });
+    };
+}
