@@ -4,6 +4,10 @@ const routes = require('./routes/bookingRouter'); // Para trabajar con las rutas
 const cors = require('cors'); // CORS para permitir solicitudes de origen cruzado
 const path = require('path')
 
+// Definimos el puerto de la aplicación
+const port = process.env.PORT || 3005
+const serverUrl = process.env.SERVER_URL
+
 // Swagger
 const swaggerUI = require('swagger-ui-express');
 const swaggerJsDoc = require('swagger-jsdoc');
@@ -16,7 +20,7 @@ const swaggerSpec = {
         },
         servers: [
             {
-                url: 'http://localhost:3000'
+                url: serverUrl,
             }
         ]
     },
@@ -25,9 +29,6 @@ const swaggerSpec = {
 
 // Cargamos las variables de entorno del archivo .env
 require('dotenv').config();
-
-// Definimos el puerto de la aplicación
-const port = process.env.PORT || 3005
 
 // Creamos una nueva aplicación Express
 const app = express();
