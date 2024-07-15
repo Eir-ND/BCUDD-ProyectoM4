@@ -1,22 +1,21 @@
+// Importamos las librerías necesarias
 const Booking = require('../models/booking');
-const { v4: uuidv4 } = require('uuid');
-const dayjs = require('dayjs');
+const { v4: uuidv4 } = require('uuid'); // Importa uuidv4 para generar IDs únicos de manera automática
+const moment = require('moment'); // Importa moment.js para trabajar con fechas
 
-let isBetween = require("dayjs/plugin/isBetween");
-dayjs.extend(isBetween);
-
+// Inicializamos las reservas
 let bookings = [];
 
 // Crear reserva
 exports.create = async (req, res) => {
+     // Extraer los datos necesarios del cuerpo de la solicitud (req.body)
     const { hotelName, arrivalDate, departureDate, roomType, guests, name, email, paymentStatus } = req.body;
-    const parsedArrivalDate = dayjs(arrivalDate).format("DD/MM/YYYY");
-    const parsedDepartureDate = dayjs(departureDate).format("DD/MM/YYYY");
+    // Crear un nuevo objeto de reserva utilizando los datos extraídos
     const newBooking = new Booking(
         uuidv4(),
         hotelName,
-        parsedArrivalDate,
-        parsedDepartureDate,
+        arrivalDate,
+        departureDate,
         guests,
         roomType,
         name,
@@ -24,8 +23,10 @@ exports.create = async (req, res) => {
         paymentStatus
     );
     
+    // Agregar la nueva reserva al arreglo de reservas (bookings)
     bookings.push(newBooking);
 
+    // Enviar una respuesta al cliente indicando que la reserva se ha creado exitosamente
     res.status(201).json({
         msg: 'Booking made successfully',
         data: newBooking,
@@ -90,70 +91,58 @@ exports.remove = async (req, res) => {
 exports.filter = async (req, res) => {
     const { hotelName, arrivalDate, departureDate, roomType, guests, name, email, paymentStatus } = req.query;
     
-    // Filtrar por nombre de hotel
-    if (hotelName) {
-        const bookingFiltered = bookings.filter(
-            (booking) => booking.hotelName === hotelName
-        );
-        if (bookingFiltered.length === 0) {
-            return res
-                .status(404)
-                .json({ msg: 'Booking not found.' })
-        };
-        return res.json({
-            msg: "Hotel name",
-            data: bookingFiltered
-        });
+    // Filtra las reservas basadas en los parámetros de consulta
+    const bookingFiltered = bookings.filter((booking) => {
+        // Filtra por nombre de hotel si se especifica
+        if (hotelName && booking.hotelName !== hotelName) {
+            return false
+        }
+
+        // Verifica si la fecha ingresada está dentro del rango de fechas de la reserva
+        const filterArrival = moment(arrivalDate);
+        const filterDeparture = moment(departureDate);
+        const bookingArrival = moment(booking.arrivalDate);
+        const bookingDeparture = moment(booking.departureDate);
+
+        // Si arrivalDate está presente, verifica si la reserva no está dentro del rango de arrivalDate y departureDate
+        if (arrivalDate && (filterArrival.isAfter(bookingDeparture, 'day') || filterDeparture.isBefore(bookingArrival, 'day'))) {
+            return false;
+        }
+
+        // Si departureDate está presente, verifica si la reserva no está dentro del rango de arrivalDate y departureDate
+        if (departureDate && (filterDeparture.isBefore(bookingArrival, 'day') || filterArrival.isAfter(bookingDeparture, 'day'))) {
+            return false;
+        }
+
+        // Filtra por tipo de habitación si se especifica
+        if (roomType && booking.roomType !== roomType) {
+            return false
+        }
+
+        // Filtra por estado de pago si se especifica
+        if (paymentStatus && booking.paymentStatus !== paymentStatus) {
+            return false
+        }
+
+        // Filtra por número de huéspedes si se especifica
+        if (guests && booking.guests !== parseInt(guests)) {
+            return false
+        }
+
+        // Si pasa todos los filtros, incluye la reserva en los resultados filtrados
+        return true
+    });
+
+    // Si no se encontraron reservas que cumplan con los criterios de filtro, devuelve un 404
+    if (bookingFiltered.length === 0) {
+        return res
+            .status(404)
+            .json({ msg: 'No bookings matching the filter criteria were found.' })
     };
 
-    // Filtrar por fechas de ingreso - egreso
-   
-
-    // Filtrar por tipo de habitación
-    if (roomType) {
-        const bookingFiltered = bookings.filter(
-            (booking) => booking.roomType === roomType
-        );
-        if (bookingFiltered.length === 0) {
-            return res
-                .status(404)
-                .json({ msg: 'Booking not found....' })
-        };
-        return res.json({
-            msg: "Room type",
-            data: bookingFiltered
-        });
-    };
-
-    // Filtrar por estado de pago
-    if (paymentStatus) {
-        const bookingFiltered = bookings.filter(
-            (booking) => booking.paymentStatus === paymentStatus
-        );
-        if (bookingFiltered.length === 0) {
-            return res
-                .status(404)
-                .json({ msg: 'Booking not found....' })
-        };
-        return res.json({
-            msg: "Payment status",
-            data: bookingFiltered
-        });
-    };
-    
-    // Filtrar por número de huespedes
-    if (guests) {
-        const bookingFiltered = bookings.filter(
-            (booking) => booking.guests === parseInt(guests)
-        );
-        if (bookingFiltered.length === 0) {
-            return res
-                .status(404)
-                .json({ msg: 'Guests Booking not found....' })
-        };
-        return res.json({
-            msg: "Guests number",
-            data: bookingFiltered
-        });
-    };
+    // Devuelve las reservas filtradas en formato JSON
+    return res.json({
+        msg: "Filtered bookings",
+        data: bookingFiltered
+    });
 }
