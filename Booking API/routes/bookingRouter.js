@@ -114,7 +114,7 @@ router.get("/booking", bookingController.findAll); // Asociamos el controlador d
  *      - in: path
  *        name: id
  *        schema:
- *          type: integer
+ *          type: string
  *        required: true
  *        description: The booking's unique identifier
  *    responses:
@@ -124,8 +124,6 @@ router.get("/booking", bookingController.findAll); // Asociamos el controlador d
  *          application/json:
  *            schema:
  *              $ref: '#/components/schemas/Booking'
- *      404:
- *        description: Order not found
  */
 
 router.get("/booking/:id", bookingController.findOne); // Asociamos el controlador de lectura de un pedido específico
@@ -192,7 +190,7 @@ router.get("/bookingFiltered", bookingController.filter); // Asociamos el contro
  *      - in: path
  *        name: id
  *        schema:
- *          type: integer
+ *          type: string
  *        required: true
  *        description: The booking's unique identifier
  *    requestBody:
@@ -208,15 +206,13 @@ router.get("/bookingFiltered", bookingController.filter); // Asociamos el contro
  *          application/json:
  *            schema:
  *              $ref: '#/components/schemas/Booking'
- *      404:
- *        description: Booking not found
  */
 
 router.patch("/booking/:id", bookingController.update); // Asociamos el controlador de actualización de un pedido
 
 /**
  * @swagger
- * /api/orders/{id}:
+ * /api/booking/{id}:
  *  delete:
  *    summary: Delete a specific booking
  *    tags: [Booking]
@@ -224,14 +220,12 @@ router.patch("/booking/:id", bookingController.update); // Asociamos el controla
  *      - in: path
  *        name: id
  *        schema:
- *          type: integer
+ *          type: string
  *        required: true
  *        description: The booking's unique identifier
  *    responses:
  *      200:
  *        description: Booking deleted successfully
- *      404:
- *        description: Booking not found
  */
 
 router.delete("/booking/:id", bookingController.remove); // Asociamos el controlador de eliminación de un pedido
