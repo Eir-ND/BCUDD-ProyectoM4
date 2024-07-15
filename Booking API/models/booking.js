@@ -1,20 +1,20 @@
 class Booking {
     constructor(
         id, 
-        nameHotel, 
+        hotelName, 
         arrivalDate, 
         departureDate, 
-        passengers, 
+        guests, 
         roomType, 
         name, 
         email, 
         paymentStatus
     ) {
         this.id = id;
-        this.nameHotel = nameHotel;
+        this.hotelName = hotelName;
         this.arrivalDate = arrivalDate;
         this.departureDate = departureDate;
-        this.passengers = passengers;
+        this.guests = guests;
         this.roomType = roomType;
         this.name = name;
         this.email = email;
